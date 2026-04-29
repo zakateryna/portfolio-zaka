@@ -255,9 +255,8 @@ function App() {
             <div className="portrait-fallback">Add portrait.png</div>
           </div>
 
-          <div className="stamp">Content · Identity · Web</div>
-          <div className="leaf leaf-one" />
-          <div className="leaf leaf-two" />
+          <div className="stamp">Strategic · Creative · Reliable</div>
+
         </div>
       </section>
 
@@ -776,49 +775,7 @@ h3 {
   transform: rotate(-12deg);
 }
 
-.leaf {
-  position: absolute;
-  z-index: 0;
-  width: 130px;
-  height: 230px;
-  border-left: 2px solid rgba(127, 146, 127, 0.62);
-  border-radius: 80% 0 0 80%;
-}
 
-.leaf::before,
-.leaf::after {
-  content: '';
-  position: absolute;
-  width: 46px;
-  height: 78px;
-  border: 2px solid rgba(127, 146, 127, 0.54);
-  border-left: 0;
-  border-radius: 50% 50% 50% 0;
-}
-
-.leaf::before {
-  top: 42px;
-  left: -4px;
-  transform: rotate(-28deg);
-}
-
-.leaf::after {
-  top: 112px;
-  left: -8px;
-  transform: rotate(18deg);
-}
-
-.leaf-one {
-  right: 4px;
-  bottom: 84px;
-}
-
-.leaf-two {
-  left: 16px;
-  bottom: 30px;
-  transform: rotate(180deg) scale(0.82);
-  opacity: 0.55;
-}
 
 .profile-panel,
 .contact-section,
