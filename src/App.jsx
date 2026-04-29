@@ -95,10 +95,10 @@ function App() {
         </a>
 
         <nav className="nav-links" aria-label="Main navigation">
-          <a href="#profile">Profile</a>
-          <a href="#projects">Projects</a>
-          <a href="#skills">Skills</a>
-          <a href="#contact">Contact</a>
+          <a href="profile">Profile</a>
+          <a href="projects">Projects</a>
+          <a href="skills">Skills</a>
+          <a href="contact">Contact</a>
         </nav>
 
         <a className="nav-cta" href="/cv/CV_Kateryna_Zavalykhata_EN_ATS.pdf" download>
