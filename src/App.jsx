@@ -66,6 +66,24 @@ const approach = [
   },
 ];
 
+function scrollToSection(id) {
+  const section = document.getElementById(id);
+  const topbar = document.querySelector(".topbar");
+
+  if (!section) return;
+
+  const topbarHeight = topbar ? topbar.getBoundingClientRect().height : 72;
+
+  // Scrolliamo al vero contenuto della sezione, non all'inizio del box con padding.
+  const target = section.querySelector(".eyebrow") || section;
+  const targetTop = target.getBoundingClientRect().top + window.scrollY;
+
+  window.scrollTo({
+    top: targetTop - topbarHeight - 34,
+    behavior: "smooth",
+  });
+}
+
 function ImageFrame({ src, alt, label }) {
   return (
     <div className="image-frame">
@@ -83,20 +101,25 @@ function ImageFrame({ src, alt, label }) {
   );
 }
 
-
-function CvDropdown({ compact = false }) {
+function CvDropdown({ compact = false, text = false }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const dropdownClassName = text
+    ? "cv-dropdown text-dropdown"
+    : compact
+    ? "cv-dropdown compact"
+    : "cv-dropdown";
+
   return (
-    <div className={compact ? "cv-dropdown compact" : "cv-dropdown"}>
+    <div className={dropdownClassName}>
       <button
         type="button"
-        className="nav-cta cv-dropdown-button"
+        className={text ? "text-dropdown-button" : "nav-cta cv-dropdown-button"}
         onClick={() => setIsOpen((value) => !value)}
         aria-expanded={isOpen}
         aria-haspopup="menu"
       >
-        Download CV <span>⌄</span>
+        Download CV <span>∨</span>
       </button>
 
       {isOpen && (
@@ -122,57 +145,102 @@ function CvDropdown({ compact = false }) {
   );
 }
 
-
-
-
-
-
-
-
 function App() {
   return (
     <main className="site-shell">
       <style>{styles}</style>
 
       <header className="topbar">
-        <a href="#home" className="brand" aria-label="Katia Zavalykhata home">
+        <a
+          href="#home"
+          className="brand"
+          aria-label="Katia Zavalykhata home"
+          onClick={(event) => {
+            event.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
           <span className="brand-mark">Z.</span>
           <span className="brand-name">ZAKA</span>
         </a>
 
         <nav className="nav-links" aria-label="Main navigation">
-          <a href="#profile">Profile</a>
-          <a href="#projects">Projects</a>
-          <a href="#skills">Skills</a>
-          <a href="#contact">Contact</a>
+          <a
+            href="#profile"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToSection("profile");
+            }}
+          >
+            Profile
+          </a>
+
+          <a
+            href="#projects"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToSection("projects");
+            }}
+          >
+            Projects
+          </a>
+
+          <a
+            href="#skills"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToSection("skills");
+            }}
+          >
+            Skills
+          </a>
+
+          <a
+            href="#contact"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToSection("contact");
+            }}
+          >
+            Contact
+          </a>
         </nav>
 
-       <CvDropdown />
+        <CvDropdown />
       </header>
 
       <section id="home" className="hero section-grid">
         <div className="hero-copy">
-          <p className="eyebrow">Digital communication · Content creation · Web skills</p>
+          <p className="eyebrow">
+            Digital communication · Content creation · Web skills
+          </p>
+
           <h1>Katia Zavalykhata</h1>
+
           <p className="hero-subtitle">
             Junior Frontend Developer · Digital Communication · Content Creation
           </p>
+
           <p className="hero-text">
-            I combine digital communication, content creation and frontend skills to build clear,
-            visual and user-focused digital experiences.
+            I combine digital communication, content creation and frontend
+            skills to build clear, visual and user-focused digital experiences.
           </p>
 
-        <div className="hero-actions">
-  <a className="button button-primary" href="#projects">
-    View projects <span>→</span>
-  </a>
+          <div className="hero-actions">
+            <button
+              type="button"
+              className="button button-primary"
+              onClick={() => scrollToSection("projects")}
+            >
+              View projects <span>→</span>
+            </button>
 
-  <CvDropdown compact />
+            <CvDropdown compact />
 
-  <a className="button button-light" href="mailto:zakateryna@icloud.com">
-    Contact me
-  </a>
-</div>
+            <a className="button button-light" href="mailto:zakateryna@icloud.com">
+              Contact me
+            </a>
+          </div>
         </div>
 
         <div className="hero-visual" aria-label="Portrait area">
@@ -184,9 +252,10 @@ function App() {
                 event.currentTarget.style.display = "none";
               }}
             />
-            <div className="portrait-fallback">Add portrait.jpg</div>
+            <div className="portrait-fallback">Add portrait.png</div>
           </div>
-          <div className="stamp">Strategic · Creative · Reliable</div>
+
+          <div className="stamp">Content · Identity · Web</div>
           <div className="leaf leaf-one" />
           <div className="leaf leaf-two" />
         </div>
@@ -197,11 +266,12 @@ function App() {
           <p className="eyebrow">Profile</p>
           <h2>A digital profile between communication, content and web.</h2>
         </div>
+
         <p>
-          I have a background in Media, Digital Communication and Journalism, later expanded through
-          a Web Developer specialization at EPICODE. My experience connects client-facing roles,
-          content creation and frontend projects, with a focus on clarity, visual identity and online
-          presence.
+          I have a background in Media, Digital Communication and Journalism,
+          later expanded through a Web Developer specialization at EPICODE. My
+          experience connects client-facing roles, content creation and frontend
+          projects, with a focus on clarity, visual identity and online presence.
         </p>
       </section>
 
@@ -211,6 +281,7 @@ function App() {
             <p className="eyebrow">Selected work</p>
             <h2>Selected Projects</h2>
           </div>
+
           <a href="mailto:zakateryna@icloud.com">Request full portfolio →</a>
         </div>
 
@@ -218,15 +289,24 @@ function App() {
           {projects.map((project) => (
             <article className="project-card" key={project.title}>
               <div className="project-number">{project.number}</div>
-              <ImageFrame src={project.image} alt={`${project.title} preview`} label={project.title} />
+
+              <ImageFrame
+                src={project.image}
+                alt={`${project.title} preview`}
+                label={project.title}
+              />
+
               <div className="project-body">
                 <p className="project-category">{project.category}</p>
                 <h3>{project.title}</h3>
                 <p className="project-role">{project.role}</p>
                 <p>{project.description}</p>
+
                 <div className="tag-list">
                   {project.stack.map((tag) => (
-                    <span className="tag" key={tag}>{tag}</span>
+                    <span className="tag" key={tag}>
+                      {tag}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -238,9 +318,12 @@ function App() {
       <section className="approach-section">
         <div className="quote-card">
           <p className="eyebrow">My approach</p>
+
           <blockquote>
-            “I shape digital experiences where content, structure and atmosphere work together.”
+            “I shape digital experiences where content, structure and atmosphere
+            work together.”
           </blockquote>
+
           <span>Katia Z.</span>
         </div>
 
@@ -261,9 +344,12 @@ function App() {
             <h2>What I bring</h2>
           </div>
         </div>
+
         <div className="skills-list">
           {skills.map((skill) => (
-            <span className="skill-pill" key={skill}>{skill}</span>
+            <span className="skill-pill" key={skill}>
+              {skill}
+            </span>
           ))}
         </div>
       </section>
@@ -273,18 +359,25 @@ function App() {
           <p className="eyebrow">Contact</p>
           <h2>Let’s connect.</h2>
           <p>
-            Open to junior opportunities in digital communication, frontend, content, marketing and
-            customer-facing roles with a digital component.
+            Open to junior opportunities in digital communication, frontend,
+            content, marketing and customer-facing roles with a digital
+            component.
           </p>
         </div>
+
         <div className="contact-links">
           <a href="mailto:zakateryna@icloud.com">zakateryna@icloud.com</a>
-          <a href="https://www.linkedin.com/in/zakateryna/" target="_blank" rel="noreferrer">
+
+          <a
+            href="https://www.linkedin.com/in/zakateryna/"
+            target="_blank"
+            rel="noreferrer"
+          >
             LinkedIn
           </a>
-          <a href="/cv/CV_Kateryna_Zavalykhata_EN_ATS.pdf" download>
-            Download CV
-          </a>
+
+          <CvDropdown text />
+
           <span>Italy · Remote / Hybrid / On-site</span>
         </div>
       </section>
@@ -332,9 +425,18 @@ body {
     var(--ivory);
 }
 
+a,
+button {
+  font: inherit;
+}
+
 a {
   color: inherit;
   text-decoration: none;
+}
+
+button {
+  border: 0;
 }
 
 img {
@@ -350,8 +452,8 @@ img {
 
 .topbar {
   position: sticky;
-  top: 14px;
-  z-index: 20;
+  top: 16px;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -421,26 +523,17 @@ img {
   transform: translateY(-2px);
 }
 
-.section-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-  align-items: center;
-  gap: clamp(36px, 6vw, 82px);
-}
-
-
 .cv-dropdown {
   position: relative;
   display: inline-flex;
 }
 
 .cv-dropdown-button {
-  border: 0;
   cursor: pointer;
-  font-family: inherit;
 }
 
-.cv-dropdown-button span {
+.cv-dropdown-button span,
+.text-dropdown-button span {
   font-size: 0.9rem;
   transform: translateY(-1px);
 }
@@ -449,7 +542,7 @@ img {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  z-index: 50;
+  z-index: 200;
   min-width: 180px;
   padding: 8px;
   border: 1px solid rgba(216, 206, 196, 0.94);
@@ -488,8 +581,33 @@ img {
   right: auto;
 }
 
+.text-dropdown {
+  width: fit-content;
+}
 
+.text-dropdown-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 0;
+  color: var(--burgundy);
+  background: transparent;
+  cursor: pointer;
+  font-weight: 800;
+}
 
+.text-dropdown .cv-dropdown-menu {
+  left: 0;
+  right: auto;
+}
+
+.section-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  align-items: center;
+  gap: clamp(36px, 6vw, 82px);
+}
 
 .hero {
   min-height: 78vh;
@@ -574,6 +692,8 @@ h3 {
   min-height: 52px;
   padding: 0 22px;
   border: 1px solid var(--line);
+  cursor: pointer;
+  background: transparent;
 }
 
 .button-primary {
@@ -742,6 +862,7 @@ h3 {
 
 .project-card {
   position: relative;
+  min-width: 0;
   overflow: hidden;
   border: 1px solid rgba(216, 206, 196, 0.94);
   border-radius: var(--radius);
@@ -779,6 +900,7 @@ h3 {
   z-index: 2;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
 }
 
 .image-fallback span {
@@ -788,6 +910,7 @@ h3 {
 }
 
 .project-body {
+  min-width: 0;
   padding: 24px;
 }
 
@@ -802,21 +925,14 @@ h3 {
   text-transform: uppercase;
 }
 
-.project-body {
-  min-width: 0;
-}
-
-.project-card {
-  min-width: 0;
-}
-
 .project-body h3 {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   font-size: clamp(1.45rem, 1.8vw, 1.9rem);
-  line-height: 1;
+  line-height: 1.18;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
+  text-overflow: unset;
+  padding-bottom: 0.08em;
 }
 
 .project-body p {
@@ -883,9 +999,12 @@ h3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
+  min-width: 0;
 }
 
 .approach-card {
+  min-width: 0;
+  overflow: hidden;
   padding: 26px;
 }
 
@@ -894,14 +1013,6 @@ h3 {
   font-size: clamp(1.25rem, 1.8vw, 1.55rem);
   line-height: 1.05;
   max-width: 100%;
-}
-  .approach-grid,
-.approach-card {
-  min-width: 0;
-}
-
-.approach-card {
-  overflow: hidden;
 }
 
 .skills-section .compact {
@@ -985,12 +1096,21 @@ h3 {
 
   .project-card {
     display: grid;
-    grid-template-columns: 0.9fr 1fr;
+    grid-template-columns: 1fr;
+    max-width: 680px;
+    margin: 0 auto;
   }
 
   .image-frame {
-    min-height: 100%;
-    aspect-ratio: auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+  }
+
+  .image-frame img {
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
   }
 }
 
@@ -1014,15 +1134,17 @@ h3 {
   }
 
   .topbar > .cv-dropdown {
-  display: none;
-}
+    display: none;
+  }
 
   h1 {
     font-size: clamp(3.9rem, 19vw, 5.8rem);
   }
 
   .hero-actions,
-  .button {
+  .button,
+  .cv-dropdown.compact,
+  .cv-dropdown.compact .cv-dropdown-button {
     width: 100%;
   }
 
@@ -1048,7 +1170,30 @@ h3 {
   }
 
   .project-card {
-    grid-template-columns: 1fr;
+    max-width: 100%;
+    border-radius: 24px;
+  }
+
+  .project-body {
+    padding: 22px;
+  }
+
+  .project-body h3 {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .project-category,
+  .project-role {
+    letter-spacing: 0.06em;
+  }
+
+  .project-number {
+    top: 12px;
+    left: 12px;
+    width: 42px;
+    height: 42px;
   }
 
   .image-frame {
@@ -1059,7 +1204,6 @@ h3 {
     flex-direction: column;
     align-items: start;
   }
-}
-`;
+}`;
 
 export default App;
