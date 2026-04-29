@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const projects = [
   {
@@ -83,6 +83,52 @@ function ImageFrame({ src, alt, label }) {
   );
 }
 
+
+function CvDropdown({ compact = false }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className={compact ? "cv-dropdown compact" : "cv-dropdown"}>
+      <button
+        type="button"
+        className="nav-cta cv-dropdown-button"
+        onClick={() => setIsOpen((value) => !value)}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+      >
+        Download CV <span>⌄</span>
+      </button>
+
+      {isOpen && (
+        <div className="cv-dropdown-menu" role="menu">
+          <a
+            href="/cv/CV_Kateryna_Zavalykhata_IT.pdf"
+            download
+            role="menuitem"
+          >
+            CV Italiano
+          </a>
+
+          <a
+            href="/cv/CV_Kateryna_Zavalykhata_EN.pdf"
+            download
+            role="menuitem"
+          >
+            CV English
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
 function App() {
   return (
     <main className="site-shell">
@@ -101,9 +147,7 @@ function App() {
           <a href="#contact">Contact</a>
         </nav>
 
-        <a className="nav-cta" href="/cv/CV_Kateryna_Zavalykhata_EN_ATS.pdf" download>
-          Download CV
-        </a>
+       <CvDropdown />
       </header>
 
       <section id="home" className="hero section-grid">
@@ -118,17 +162,17 @@ function App() {
             visual and user-focused digital experiences.
           </p>
 
-          <div className="hero-actions">
-            <a className="button button-primary" href="#projects">
-              View projects <span>→</span>
-            </a>
-            <a className="button button-secondary" href="/cv/CV_Kateryna_Zavalykhata_EN_ATS.pdf" download>
-              Download CV
-            </a>
-            <a className="button button-light" href="mailto:zakateryna@icloud.com">
-              Contact me
-            </a>
-          </div>
+        <div className="hero-actions">
+  <a className="button button-primary" href="#projects">
+    View projects <span>→</span>
+  </a>
+
+  <CvDropdown compact />
+
+  <a className="button button-light" href="mailto:zakateryna@icloud.com">
+    Contact me
+  </a>
+</div>
         </div>
 
         <div className="hero-visual" aria-label="Portrait area">
@@ -383,6 +427,69 @@ img {
   align-items: center;
   gap: clamp(36px, 6vw, 82px);
 }
+
+
+.cv-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.cv-dropdown-button {
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.cv-dropdown-button span {
+  font-size: 0.9rem;
+  transform: translateY(-1px);
+}
+
+.cv-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 50;
+  min-width: 180px;
+  padding: 8px;
+  border: 1px solid rgba(216, 206, 196, 0.94);
+  border-radius: 18px;
+  background: rgba(255, 250, 244, 0.96);
+  box-shadow: 0 18px 45px rgba(69, 39, 30, 0.14);
+  backdrop-filter: blur(16px);
+}
+
+.cv-dropdown-menu a {
+  display: flex;
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: var(--charcoal);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.cv-dropdown-menu a:hover {
+  color: var(--burgundy);
+  background: rgba(117, 23, 39, 0.07);
+}
+
+.cv-dropdown.compact .cv-dropdown-button {
+  min-height: 52px;
+  padding: 0 22px;
+  color: var(--burgundy);
+  background: rgba(255, 250, 244, 0.75);
+  border: 1px solid rgba(117, 23, 39, 0.28);
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.cv-dropdown.compact .cv-dropdown-menu {
+  left: 0;
+  right: auto;
+}
+
+
+
 
 .hero {
   min-height: 78vh;
@@ -906,9 +1013,9 @@ h3 {
     letter-spacing: 0.32em;
   }
 
-  .nav-cta {
-    display: none;
-  }
+  .topbar > .cv-dropdown {
+  display: none;
+}
 
   h1 {
     font-size: clamp(3.9rem, 19vw, 5.8rem);
